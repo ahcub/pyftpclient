@@ -10,10 +10,10 @@ logger = getLogger('ftp_client.sftp')
 
 
 class SFTPClient:
-    def __init__(self, host, user=None, password=None, port=22, key_filename=None):
-        self.host = host
+    def __init__(self, hostname, username=None, password=None, port=22, key_filename=None):
+        self.host = hostname
         self.port = port
-        self.user = user
+        self.user = username
         self.passwd = password
         self.key_filename = key_filename
         self.sftp = None

@@ -11,10 +11,10 @@ logger = getLogger('ftp_client.ftp')
 
 
 class FTPClient:
-    def __init__(self, host, user, password, port=22):
-        self.host = host
+    def __init__(self, hostname, username, password, port=22):
+        self.host = hostname
         self.port = port
-        self.user = user
+        self.user = username
         self.passwd = password
         self.ftp = None
 
