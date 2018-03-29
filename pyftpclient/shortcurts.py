@@ -1,5 +1,5 @@
-from ftp_client import FTPClient
-from sftp_client import SFTPClient
+from pyftpclient.ftp_client import FTPClient
+from pyftpclient.sftp_client import SFTPClient
 
 
 class PyFTPClient(Exception):

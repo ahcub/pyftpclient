@@ -2,22 +2,23 @@ import fnmatch
 from ftplib import FTP, error_temp, error_perm
 from io import BytesIO, IOBase
 from logging import getLogger
-from os.path import basename, dirname, join
+from os import listdir
+
+from os.path import basename, dirname, join, exists, isfile, isdir
 from time import sleep
 
 from os_utils.path import mkpath
 
+from pyftpclient.client_base import FTPClientBase, FTPClientBaseError
+
 logger = getLogger('ftp_client.ftp')
 
 
-class FTPClient:
-    def __init__(self, hostname, username, password, port=22):
-        self.host = hostname
-        self.port = port
-        self.user = username
-        self.passwd = password
-        self.ftp = None
+class FTPClientError(FTPClientBaseError):
+    pass
 
+
+class FTPClient(FTPClientBase):
     def connect(self):
         logger.info('Openning FTP connection to %s', self.host)
         self.ftp = FTP()
@@ -26,13 +27,6 @@ class FTPClient:
 
     def disconnect(self):
         self.ftp.quit()
-
-    def __enter__(self):
-        self.connect()
-        return self
-
-    def __exit__(self, *args):
-        self.disconnect()
 
     def listdir(self, path):
         return [basename(dir_path) for dir_path in self.ftp.nlst(path)]
@@ -71,7 +65,7 @@ class FTPClient:
         except error_temp as error:
             logger.info('directory does not exist: %s', error)
 
-    def copy_tree(self, src, dst):
+    def download_tree(self, src, dst):
         for sub_path in self.ftp.nlst(src):
             if sub_path == src:
                 with open(dst, 'wb') as dst_file:
@@ -79,6 +73,18 @@ class FTPClient:
             else:
                 mkpath(dst)
                 self.copy_tree(sub_path, join(dst, basename(sub_path)))
+
+    def upload_tree(self, src, dst):
+        if isfile(src):
+            with open(src, 'rb') as src_file:
+                self.ftp.storbinary('STOR {}'.format(dst), src_file)
+        elif isdir(src):
+            self.mkdir(dst)
+            for sub_path in listdir(src):
+                full_sub_path = join(src, sub_path)
+                self.upload_tree(full_sub_path, '/'.join((dst, sub_path)))
+        else:
+            raise FTPClientError('FTP client supports only files and directories on upload operation')
 
     def exists(self, path):
         try:
