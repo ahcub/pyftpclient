@@ -45,3 +45,20 @@ class FTPClientBase:
     @abstractmethod
     def upload_tree(self, src, dst):
         pass
+
+    def copy_file(self, src, dst, copy_type='auto'):
+        if copy_type == 'auto':
+            copy_type = 'up' if exists(src) else 'down'
+
+        if copy_type == 'down':
+            self.download_file(src, dst)
+        else:
+            self.upload_file(src, dst)
+
+    @abstractmethod
+    def download_file(self, src, dst):
+        pass
+
+    @abstractmethod
+    def upload_file(self, src, dst):
+        pass

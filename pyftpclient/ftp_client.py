@@ -68,16 +68,14 @@ class FTPClient(FTPClientBase):
     def download_tree(self, src, dst):
         for sub_path in self.ftp.nlst(src):
             if sub_path == src:
-                with open(dst, 'wb') as dst_file:
-                    self.ftp.retrbinary('RETR {}'.format(sub_path), dst_file.write)
+                self.download_file(src, dst)
             else:
                 mkpath(dst)
                 self.copy_tree(sub_path, join(dst, basename(sub_path)))
 
     def upload_tree(self, src, dst):
         if isfile(src):
-            with open(src, 'rb') as src_file:
-                self.ftp.storbinary('STOR {}'.format(dst), src_file)
+            self.upload_file(src, dst)
         elif isdir(src):
             self.mkdir(dst)
             for sub_path in listdir(src):
@@ -85,6 +83,14 @@ class FTPClient(FTPClientBase):
                 self.upload_tree(full_sub_path, '/'.join((dst, sub_path)))
         else:
             raise FTPClientError('FTP client supports only files and directories on upload operation')
+
+    def download_file(self, src, dst):
+        with open(dst, 'wb') as dst_file:
+            self.ftp.retrbinary('RETR {}'.format(src), dst_file.write)
+
+    def upload_file(self, src, dst):
+        with open(src, 'rb') as src_file:
+            self.ftp.storbinary('STOR {}'.format(dst), src_file)
 
     def exists(self, path):
         try:

@@ -65,7 +65,7 @@ class SFTPClient(FTPClientBase):
 
     def upload_tree(self, src, dst):
         if isfile(src):
-            self.ftp.put(src, dst)
+            self.upload_file(src, dst)
         elif isdir(src):
             self.mkdir(dst)
             for sub_path in listdir(src):
@@ -81,8 +81,14 @@ class SFTPClient(FTPClientBase):
             if stat.S_ISDIR(fileattr.st_mode):
                 self.copy_tree(src_path, dst_path)
             else:
-                delete(dst_path)
-                self.ftp.get(src_path, dst_path)
+                self.download_file(src_path, dst_path)
+
+    def download_file(self, src, dst):
+        delete(dst)
+        self.ftp.get(src, dst)
+
+    def upload_file(self, src, dst):
+        self.ftp.put(src, dst)
 
     def exists(self, path):
         try:
