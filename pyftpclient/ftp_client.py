@@ -71,7 +71,7 @@ class FTPClient(FTPClientBase):
                 self.download_file(src, dst)
             else:
                 mkpath(dst)
-                self.copy_tree(sub_path, join(dst, basename(sub_path)))
+                self.download_tree(sub_path, join(dst, basename(sub_path)))
 
     def upload_tree(self, src, dst):
         if isfile(src):

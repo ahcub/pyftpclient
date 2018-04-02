@@ -79,7 +79,7 @@ class SFTPClient(FTPClientBase):
             src_path = '/'.join((src, fileattr.filename))
             dst_path = join(src, fileattr.filename)
             if stat.S_ISDIR(fileattr.st_mode):
-                self.copy_tree(src_path, dst_path)
+                self.download_tree(src_path, dst_path)
             else:
                 self.download_file(src_path, dst_path)
 
