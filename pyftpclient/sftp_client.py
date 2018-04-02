@@ -54,14 +54,16 @@ class SFTPClient(FTPClientBase):
             self.ftp.mkdir(dir_path.rstrip('/'))
 
     def delete(self, path):
-        if self.exists(path):
-            for file_attr in self.ftp.listdir_attr(path):
-                full_file_path = '/'.join((path, file_attr.filename))
-                if stat.S_ISDIR(file_attr.st_mode):
+        try:
+            if stat.S_ISDIR(self.ftp.stat(path).st_mode):
+                for file_name in self.ftp.listdir(path):
+                    full_file_path = '/'.join((path, file_name))
                     self.delete(full_file_path)
-                else:
-                    self.ftp.remove(full_file_path)
-            self.ftp.rmdir(path)
+                self.ftp.rmdir(path)
+            else:
+                self.ftp.remove(path)
+        except FileNotFoundError:
+            pass
 
     def upload_tree(self, src, dst):
         if isfile(src):
