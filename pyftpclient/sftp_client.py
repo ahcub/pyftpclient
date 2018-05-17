@@ -41,7 +41,10 @@ class SFTPClient(FTPClientBase):
 
     def file_glob(self, path):
         dir_name = dirname(path)
-        return fnmatch.filter(['/'.join([dir_name, filename]) for filename in self.ftp.listdir(dir_name)], path)
+        if self.exists(dir_name):
+            return fnmatch.filter(['/'.join([dir_name, filename]) for filename in self.ftp.listdir(dir_name)], path)
+        else:
+            return []
 
     def open(self, path, mode='r'):
         return self.ftp.open(path, mode=mode)
