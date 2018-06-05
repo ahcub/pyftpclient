@@ -33,7 +33,10 @@ class FTPClient(FTPClientBase):
 
     def file_glob(self, path):
         dir_name = dirname(path)
-        return fnmatch.filter(self.ftp.nlst(dir_name), path)
+        if self.exists(dir_name):
+            return fnmatch.filter(self.ftp.nlst(dir_name), path)
+        else:
+            return []
 
     def open(self, path, mode='r'):
         return FTPFile(self.ftp, path, mode).open()
