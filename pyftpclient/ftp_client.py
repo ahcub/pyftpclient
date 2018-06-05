@@ -42,7 +42,10 @@ class FTPClient(FTPClientBase):
         try:
             self.ftp.nlst(dir_path)
         except error_temp:
-            self.mkdir(dirname(dir_path.rstrip('/')))
+            try:
+                self.mkdir(dirname(dir_path.rstrip('/')))
+            except error_perm:
+                logger.warning('failed to create a parent directory')
             self.ftp.mkd(dir_path.rstrip('/'))
 
     def delete(self, path):
