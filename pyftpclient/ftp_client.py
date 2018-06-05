@@ -1,10 +1,9 @@
 import fnmatch
-from ftplib import FTP, error_temp, error_perm
+from ftplib import FTP, error_perm, error_temp
 from io import BytesIO, IOBase
 from logging import getLogger
 from os import listdir
-
-from os.path import basename, dirname, join, exists, isfile, isdir
+from os.path import basename, dirname, isdir, isfile, join
 from time import sleep
 
 from os_utils.path import mkpath

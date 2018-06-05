@@ -2,11 +2,10 @@ import fnmatch
 import stat
 from logging import getLogger
 from os import listdir
+from os.path import dirname, isdir, isfile, join
 
-from os.path import dirname, join, isfile, isdir
-
-from os_utils.path import mkpath, delete
-from paramiko import SSHClient, AutoAddPolicy
+from os_utils.path import delete, mkpath
+from paramiko import AutoAddPolicy, SSHClient
 
 from pyftpclient.client_base import FTPClientBase, FTPClientBaseError
 
