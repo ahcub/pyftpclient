@@ -1,7 +1,7 @@
 FTP client wrapper
 ====================
 
-pyftpclient is a library that is made to make work with FTP/SFTP simple. it has the common functions that you would use when working with a regular file system, like open a file listdir, and glob. It also has funcitons to simple download/upload of the files and directories from/to remote drive. The library takes care about opening and closing the sessions, so you don't have to worry about it
+pyftpclient is a library that is made to make work with FTP/SFTP simple. it has the common functions that you would use when working with a regular file system, like open a file listdir, and glob, delete file or directory. It also has funcitons to simple download/upload of the files and directories from/to remote drive. The library takes care about opening and closing the sessions, so you don't have to worry about it
 
 
 SFTPClient example
