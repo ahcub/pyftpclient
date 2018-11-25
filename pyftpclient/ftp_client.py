@@ -90,6 +90,8 @@ class FTPClient(FTPClientBase):
             raise FTPClientError('FTP client supports only files and directories on upload operation')
 
     def download_file(self, src, dst):
+        if dst.endswith('/') or isdir(dst):
+            dst = join(dst, basename(src))
         with open(dst, 'wb') as dst_file:
             self.ftp.retrbinary('RETR {}'.format(src), dst_file.write)
 

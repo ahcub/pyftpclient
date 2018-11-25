@@ -2,7 +2,7 @@ import fnmatch
 import stat
 from logging import getLogger
 from os import listdir
-from os.path import dirname, isdir, isfile, join
+from os.path import dirname, isdir, isfile, join, basename
 
 from os_utils.path import delete, mkpath
 from paramiko import AutoAddPolicy, SSHClient
@@ -88,6 +88,8 @@ class SFTPClient(FTPClientBase):
                 self.download_file(src_path, dst_path)
 
     def download_file(self, src, dst):
+        if dst.endswith('/') or isdir(dst):
+            dst = join(dst, basename(src))
         delete(dst)
         self.ftp.get(src, dst)
 
