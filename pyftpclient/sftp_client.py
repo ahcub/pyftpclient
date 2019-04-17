@@ -96,6 +96,13 @@ class SFTPClient(FTPClientBase):
     def upload_file(self, src, dst):
         self.ftp.put(src, dst)
 
+    def file_size(self, path, bytes_magnitude=1):
+        """
+        :param bytes_magnitude: 1-bytes, 2-Kb, 3-Mb, 4-Gb
+        """
+        stat = self.ftp.stat(path)
+        return stat.st_size / 1024**bytes_magnitude
+
     def exists(self, path):
         try:
             self.ftp.stat(path)
