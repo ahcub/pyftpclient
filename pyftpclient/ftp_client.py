@@ -106,6 +106,12 @@ class FTPClient(FTPClientBase):
         except error_temp:
             return False
 
+    def file_size(self, path, bytes_magnitude=1):
+        """
+        :param bytes_magnitude: 1-bytes, 2-Kb, 3-Mb, 4-Gb
+        """
+        return self.ftp.size(path) / 1024**bytes_magnitude
+
 
 class FTPFile(IOBase):
     def __init__(self, ftp, path, mode):
