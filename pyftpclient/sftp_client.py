@@ -2,8 +2,7 @@ import fnmatch
 import stat
 from logging import getLogger
 from os import listdir
-from os.path import dirname, isdir, isfile, join, basename
-from shutil import copyfileobj
+from os.path import dirname, isdir, isfile, join, basename, getsize
 
 from os_utils.path import delete, mkpath
 from paramiko import AutoAddPolicy, SSHClient
@@ -92,9 +91,12 @@ class SFTPClient(FTPClientBase):
         if dst.endswith('/') or isdir(dst):
             dst = join(dst, basename(src))
         delete(dst)
-        with self.ftp.open(src, 'rb') as remote_file:
-            with open(dst, 'wb') as dst_file:
-                copyfileobj(remote_file, dst_file)
+        self.ftp.get(src, dst)
+        src_size = self.file_size(src)
+        dst_size = getsize(dst)
+        if src_size != dst_size:
+            raise SFTPClientError('source and destination size mismatch after copy, '
+                                  'src: {} vs dst: {}'.format(src_size, dst_size))
 
     def upload_file(self, src, dst):
         self.ftp.put(src, dst)
