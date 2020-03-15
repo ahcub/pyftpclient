@@ -3,6 +3,7 @@ import stat
 from logging import getLogger
 from os import listdir
 from os.path import dirname, isdir, isfile, join, basename
+from shutil import copyfileobj
 
 from os_utils.path import delete, mkpath
 from paramiko import AutoAddPolicy, SSHClient
@@ -91,7 +92,8 @@ class SFTPClient(FTPClientBase):
         if dst.endswith('/') or isdir(dst):
             dst = join(dst, basename(src))
         delete(dst)
-        self.ftp.get(src, dst)
+        with self.ftp.open(src, 'rb') as remote_file:
+            copyfileobj(remote_file, open(dst, 'wb'))
 
     def upload_file(self, src, dst):
         self.ftp.put(src, dst)
