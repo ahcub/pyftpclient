@@ -93,7 +93,8 @@ class SFTPClient(FTPClientBase):
             dst = join(dst, basename(src))
         delete(dst)
         with self.ftp.open(src, 'rb') as remote_file:
-            copyfileobj(remote_file, open(dst, 'wb'))
+            with open(dst, 'wb') as dst_file:
+                copyfileobj(remote_file, dst_file)
 
     def upload_file(self, src, dst):
         self.ftp.put(src, dst)
