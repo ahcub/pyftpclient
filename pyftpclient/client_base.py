@@ -29,6 +29,14 @@ class FTPClientBase:
     def disconnect(self):
         pass
 
+    @abstractmethod
+    def isdir(self, _path):
+        pass
+
+    @abstractmethod
+    def isfile(self, _path):
+        pass
+
     def copy_tree(self, src, dst, copy_type='auto'):
         if copy_type == 'auto':
             copy_type = 'up' if exists(src) else 'down'

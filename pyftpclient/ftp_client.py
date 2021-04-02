@@ -7,6 +7,7 @@ from os.path import basename, dirname, isdir, isfile, join
 from time import sleep
 
 from os_utils.path import mkpath
+from paramiko import SFTPAttributes
 
 from pyftpclient.client_base import FTPClientBase, FTPClientBaseError
 
@@ -111,6 +112,20 @@ class FTPClient(FTPClientBase):
         :param bytes_magnitude: 1-bytes, 2-Kb, 3-Mb, 4-Gb
         """
         return self.ftp.size(path) / 1024**bytes_magnitude
+
+    def isdir(self, _path):
+        return not self.isfile(_path)
+
+    def isfile(self, _path):
+        old = self.ftp.pwd()
+        try:
+            self.ftp.cwd(_path)
+        except Exception as e:
+            if "550" in e.__str__():
+                return True
+        finally:
+            self.ftp.cwd(old)
+        return False
 
 
 class FTPFile(IOBase):

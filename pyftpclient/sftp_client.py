@@ -17,6 +17,15 @@ class SFTPClientError(FTPClientBaseError):
 
 
 class SFTPClient(FTPClientBase):
+
+    def isdir(self, _path):
+        _stat = self.ftp.stat(_path).st_mode
+        return stat.S_ISDIR(_stat)
+
+    def isfile(self, _path):
+        _stat = self.ftp.stat(_path).st_mode
+        return stat.S_ISREG(_stat)
+
     def __init__(self, hostname, username=None, password=None, port=22, key_filename=None):
         super(SFTPClient, self).__init__(hostname, username, password, port)
         self.key_filename = key_filename
