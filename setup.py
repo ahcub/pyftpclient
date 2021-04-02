@@ -16,7 +16,7 @@ setup(
     packages=find_packages(include=('pyftpclient',)),
     package_data={'': ['requirements.txt', 'LICENCE']},
     include_package_data=True,
-    version='0.1.15',
+    version='0.1.16',
     description='ftp client wrapper to simplify working with paramiko or ftplib',
     long_description=long_description,
     long_description_content_type='text/markdown',
