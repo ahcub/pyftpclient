@@ -1,2 +1,0 @@
-paramiko
-os_utils
